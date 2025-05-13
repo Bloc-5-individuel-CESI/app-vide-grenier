@@ -28,7 +28,7 @@ $router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']
 
 ## Vues
 
-Les vues sont rendues grâce à **Twig**. 
+Les vues sont rendues grâce à **Twig**. hey ?
 Vous les retrouverez dans le dossier `App/Views`. 
 
 ```php
