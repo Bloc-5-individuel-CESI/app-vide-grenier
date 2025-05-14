@@ -1,0 +1,58 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Vide Grenier",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080"
+        }
+    ],
+    "paths": {
+        "/api/products": {
+            "get": {
+                "summary": "Liste les produits",
+                "operationId": "e35803db7dc3263e3622538255f4c890",
+                "parameters": [
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Tri des articles",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des articles"
+                    }
+                }
+            }
+        },
+        "/api/cities": {
+            "get": {
+                "summary": "Recherche de villes",
+                "operationId": "a0f15af3ba703749030849d863dcb260",
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "Nom de la ville à rechercher",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des villes correspondantes"
+                    }
+                }
+            }
+        }
+    }
+}
