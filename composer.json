@@ -2,7 +2,8 @@
     "require": {
         "twig/twig": "~3.0",
       "ext-pdo": "*",
-      "ext-json": "*"
+      "ext-json": "*",
+        "zircote/swagger-php": "^5.1"
     },
     "autoload": {
         "psr-4": {
