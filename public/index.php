@@ -13,6 +13,20 @@ session_start();
  */
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+// AUTO-LOGIN depuis le cookie remember_me
+use App\Models\User;
+
+if (!isset($_SESSION['user']) && isset($_COOKIE['remember_me'])) {
+    $token = $_COOKIE['remember_me'];
+    $user = User::getByRememberToken($token);
+
+    if ($user && $user['remember_token_expires'] > time()) {
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+        ];
+    }
+}
 
 /**
  * Error and Exception handling
