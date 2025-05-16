@@ -10,14 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    # Correction : Les services doivent être dans la section du job
     services:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
         ports: [3306:3306]
         options: >-
           --health-cmd="mysqladmin ping"
@@ -26,7 +27,7 @@ jobs:
           --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4  # Version mise à jour
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -38,10 +39,15 @@ jobs:
     - name: Install dependencies
       run: composer install --no-progress --prefer-dist
 
+    # Nouvelle étape pour attendre que MySQL soit prêt
+    - name: Wait for MySQL
+      run: sleep 10
+
     - name: Run PHPUnit
-      env:
-        DB_HOST: db
-        DB_NAME: ${{ secrets.MYSQL_DATABASE }}
-        DB_USER: ${{ secrets.MYSQL_USER }}
-        DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+      DB_USERNAME: ${{ secrets.MYSQL_USER }}
+      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       run: vendor/bin/phpunit
