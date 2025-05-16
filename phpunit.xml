@@ -3,6 +3,10 @@
          colors="true"
          verbose="true"
          stopOnFailure="false">
+         <server name="DB_HOST" value="127.0.0.1"/>
+<server name="DB_DATABASE" value="test_db"/>
+<server name="DB_USERNAME" value="test_user"/>
+<server name="DB_PASSWORD" value="test_pass"/>
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>./tests</directory>
