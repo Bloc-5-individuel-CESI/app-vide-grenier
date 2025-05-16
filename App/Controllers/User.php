@@ -95,34 +95,56 @@ class User extends \Core\Controller
         }
     }
 
-    private function login($data){
+    private function login($data)
+    {
         try {
-            if(!isset($data['email'])){
-                throw new Exception('TODO');
+            if (!isset($data['email'])) {
+                throw new Exception('Email manquant');
             }
-
+    
             $user = \App\Models\User::getByLogin($data['email']);
-
-            if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
-                return false;
+    
+            if (!$user) {
+                throw new Exception("Utilisateur introuvable");
             }
-
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
-            $_SESSION['user'] = array(
+    
+            if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
+                throw new Exception("Mot de passe incorrect");
+            }
+    
+            // Authentification réussie : on sauvegarde en session
+            $_SESSION['user'] = [
                 'id' => $user['id'],
                 'username' => $user['username'],
-            );
-
+            ];
+    
+            // Se souvenir de moi ?
+            if (!empty($data['remember_me'])) {
+                $token = bin2hex(random_bytes(32)); // 64 caractères sécurisés
+                $expires = time() + (86400 * 30); // 30 jours
+    
+                // Stockage en base (via un champ `remember_token` et `remember_token_expires`)
+                \App\Models\User::storeRememberToken($user['id'], $token, $expires);
+    
+                // Création du cookie sécurisé
+                setcookie('remember_me', $token, [
+                    'expires' => $expires,
+                    'path' => '/',
+                    'httponly' => true,
+                    'secure' => isset($_SERVER['HTTPS']),
+                    'samesite' => 'Strict',
+                ]);
+            }
+    
             return true;
-
+    
         } catch (Exception $ex) {
-            // TODO : Set flash if error
-            /* Utility\Flash::danger($ex->getMessage());*/
+            // TODO: Utiliser Flash pour afficher les erreurs
+            // \Utility\Flash::danger($ex->getMessage());
+            return false;
         }
     }
+    
 
 
     /**
@@ -133,29 +155,23 @@ class User extends \Core\Controller
      * @since 1.0.2
      */
     public function logoutAction() {
+    // 1. Supprime le token de la BDD
+    if (isset($_SESSION['user']['id'])) {
+        \App\Models\User::clearRememberToken($_SESSION['user']['id']);
+    }
 
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
-        // Destroy all data registered to the session.
+    // 2. Supprime le cookie remember_me
+    if (isset($_COOKIE['remember_me'])) {
+        setcookie('remember_me', '', time() - 3600, "/");
+        unset($_COOKIE['remember_me']);
+    }
 
-        $_SESSION = array();
+    // 3. Supprime la session
+    session_unset();
+    session_destroy();
 
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
-
-        session_destroy();
-
-        header ("Location: /");
-
-        return true;
+    header('Location: /login');
+    exit;
     }
 
 }

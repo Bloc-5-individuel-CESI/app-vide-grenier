@@ -14,10 +14,10 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
         ports: [3306:3306]
         options: >-
           --health-cmd="mysqladmin ping"
@@ -26,22 +26,27 @@ jobs:
           --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-        extensions: mbstring, pdo, pdo_mysql
-        tools: composer
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql
+          tools: composer
 
-    - name: Install dependencies
-      run: composer install --no-progress --prefer-dist
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
 
-    - name: Run PHPUnit
-      env:
-        DB_HOST: 127.0.0.1
-        DB_NAME: ${{ secrets.MYSQL_DATABASE }}
-        DB_USER: ${{ secrets.MYSQL_USER }}
-        DB_PASS: ${{ secrets.MYSQL_PASSWORD }}
-      run: vendor/bin/phpunit
+      - name: Wait for MySQL
+        run: sleep 10
+
+      - name: Run PHPUnit
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: db
+          DB_PORT: 3306
+          DB_NAME: ${{ secrets.MYSQL_DATABASE }}
+          DB_USER: ${{ secrets.MYSQL_USER }}
+          DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        run: vendor/bin/phpunit
