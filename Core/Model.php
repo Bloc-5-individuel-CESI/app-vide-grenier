@@ -23,8 +23,8 @@ abstract class Model
         static $db = null;
 
         if ($db === null) {
-            $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=utf8';
-            $db = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASSWORD'));
+            $dsn = 'mysql:host=' . Config::DB_HOST . ';dbname=' . Config::DB_NAME . ';charset=utf8';
+            $db = new PDO($dsn, Config::DB_USER, Config::DB_PASSWORD);
 
             // Throw an Exception when an error occurs
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
