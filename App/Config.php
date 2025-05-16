@@ -5,38 +5,31 @@ namespace App;
 /**
  * Application configuration
  *
- * PHP version 7.0
+ * PHP version 8+
  */
 class Config
 {
-
     /**
-     * Database host
      * @var string
      */
-    const DB_HOST = 'db';
+    public static string $DB_HOST;
+    public static string $DB_NAME;
+    public static string $DB_USER;
+    public static string $DB_PASSWORD;
 
     /**
-     * Database name
-     * @var string
+     * @var bool
      */
-    const DB_NAME = 'vide_grenier';
+    public const SHOW_ERRORS = true;
 
     /**
-     * Database user
-     * @var string
+     * Initialise les valeurs dynamiques à partir des variables d'environnement
      */
-    const DB_USER = 'vide_grenier_user';
-
-    /**
-     * Database password
-     * @var string
-     */
-    const DB_PASSWORD = 'dev_password';
-
-    /**
-     * Show or hide error messages on screen
-     * @var boolean
-     */
-    const SHOW_ERRORS = true;
+    public static function init(): void
+    {
+        self::$DB_HOST = getenv('DB_HOST') ?: '127.0.0.1';
+        self::$DB_NAME = getenv('DB_NAME') ?: 'vide_grenier';
+        self::$DB_USER = getenv('DB_USER') ?: 'vide_grenier_user';
+        self::$DB_PASSWORD = getenv('DB_PASSWORD') ?: 'dev_password';
+    }
 }

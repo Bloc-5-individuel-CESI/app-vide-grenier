@@ -13,9 +13,13 @@ session_start();
  */
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// AUTO-LOGIN depuis le cookie remember_me
 use App\Models\User;
+use App\Config;
 
+// Initialisation des variables d'environnement dynamiques
+Config::init();
+
+// AUTO-LOGIN depuis le cookie remember_me
 if (!isset($_SESSION['user']) && isset($_COOKIE['remember_me'])) {
     $token = $_COOKIE['remember_me'];
     $user = User::getByRememberToken($token);
@@ -35,7 +39,6 @@ error_reporting(E_ALL);
 set_error_handler('Core\Error::errorHandler');
 set_exception_handler('Core\Error::exceptionHandler');
 
-
 /**
  * Routing
  */
@@ -51,9 +54,6 @@ $router->add('product', ['controller' => 'Product', 'action' => 'index', 'privat
 $router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']);
 $router->add('{controller}/{action}');
 
-/*
- * Gestion des erreurs dans le routing
- */
 try {
     $router->dispatch($_SERVER['QUERY_STRING']);
 } catch(Exception $e){
