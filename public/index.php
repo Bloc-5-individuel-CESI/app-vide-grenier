@@ -49,6 +49,7 @@ $router->add('logout', ['controller' => 'User', 'action' => 'logout', 'private' 
 $router->add('account', ['controller' => 'User', 'action' => 'account', 'private' => true]);
 $router->add('product', ['controller' => 'Product', 'action' => 'index', 'private' => true]);
 $router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']);
+$router->add('contact', ['controller' => 'Contact', 'action' => 'index']);
 $router->add('{controller}/{action}');
 
 /*
