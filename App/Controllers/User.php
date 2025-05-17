@@ -42,21 +42,31 @@ class User extends \Core\Controller
      */
     public function registerAction()
     {
-        if(isset($_POST['submit'])){
+        if (isset($_POST['submit'])) {
             $f = $_POST;
-
-            if($f['password'] !== $f['password-check']){
+    
+            if ($f['password'] !== $f['password-check']) {
                 // TODO: Gestion d'erreur côté utilisateur
+                return;
             }
-
+    
             // validation
-
-            $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+    
+            $userId = $this->register($f);
+    
+            // Connexion immédiate après inscription
+            if ($userId) {
+                $this->login($f);
+                header('Location: /account');
+                return;
+            }
+    
+            // TODO: Afficher une erreur si l'inscription a échoué
         }
-
+    
         View::renderTemplate('User/register.html');
     }
+    
 
     /**
      * Affiche la page du compte
@@ -73,7 +83,7 @@ class User extends \Core\Controller
     /*
      * Fonction privée pour enregister un utilisateur
      */
-    private function register($data)
+    protected function register($data)
     {
         try {
             // Generate a salt, which will be applied to the during the password
@@ -95,7 +105,7 @@ class User extends \Core\Controller
         }
     }
 
-    private function login($data)
+    protected function login($data)
     {
         try {
             if (!isset($data['email'])) {
