@@ -1,5 +1,5 @@
 # Étape 1: Utiliser l'image officielle PHP avec Apache
-FROM php:8.1-apache
+FROM php:8.3-apache
 
 # Étape 2: Installer les dépendances système et PHP
 RUN apt-get update && apt-get install -y \
@@ -35,7 +35,8 @@ RUN chown -R www-data:www-data /var/www/html/public/style && \
     chmod -R 775 /var/www/html/public/style
 
 # Étape 10: Installer les dépendances PHP et JS + compiler le SCSS
-RUN composer install && \
+RUN git config --global --add safe.directory /var/www/html && \
+    composer install && \
     npm install && \
     npm run build
 

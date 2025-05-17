@@ -1,1 +1,1 @@
-{"version":1,"defects":{"RememberMeTest::testRememberMeStoresToken":8,"RememberMeTest::testRememberMeTokenExpires":8},"times":{"SampleTest::testAddition":0.004}}
+{"version":1,"defects":{"RememberMeTest::testRememberMeStoresToken":8,"RememberMeTest::testRememberMeTokenExpires":8},"times":{"SampleTest::testAddition":0.003,"UserRememberMeTest::testStoreRememberToken":0.02,"UserRememberMeTest::testClearRememberToken":0.005}}
