@@ -62,5 +62,52 @@ class User extends Model {
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+ * Stocke un token de connexion persistante (remember me)
+ */
+public static function storeRememberToken($userId, $token, $expires)
+{
+    $db = static::getDB();
+
+    $stmt = $db->prepare("
+        UPDATE users 
+        SET remember_token = :token, remember_token_expires = :expires 
+        WHERE id = :id
+    ");
+
+    $stmt->execute([
+        ':token' => $token,
+        ':expires' => date('Y-m-d H:i:s', $expires),
+        ':id' => $userId
+    ]);
+}
+
+/**
+ * Récupère un utilisateur via le token remember me
+ */
+public static function getByRememberToken($token)
+{
+    $db = static::getDB();
+
+    $stmt = $db->prepare("
+        SELECT * FROM users 
+        WHERE remember_token = :token 
+        AND remember_token_expires > NOW()
+        LIMIT 1
+    ");
+
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+
+    return $stmt->fetch(\PDO::FETCH_ASSOC);
+}
+
+public static function clearRememberToken($userId)
+{
+    $db = static::getDB();
+    $stmt = $db->prepare('UPDATE users SET remember_token = NULL, remember_token_expires = NULL WHERE id = :id');
+    $stmt->bindParam(':id', $userId, \PDO::PARAM_INT);
+    $stmt->execute();
+}
 
 }

@@ -1,0 +1,66 @@
+# Docker Compose pour l'environnement de développement
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV: dev
+    image: vide-grenier/app:dev
+    container_name: vide-grenier-dev
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=true
+      - DB_HOST=db
+      - DB_NAME=vide_grenier
+      - DB_USER=vide_grenier_user
+      - DB_PASS=dev_password
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: vide-grenier-db-dev
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=vide_grenier
+      - MYSQL_USER=vide_grenier_user
+      - MYSQL_PASSWORD=dev_password
+    volumes:
+      - vide_grenier_dev_db:/var/lib/mysql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/import.sql
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: vide-grenier-phpmyadmin-dev
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+  
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: vide-grenier-swagger-ui
+    ports:
+      - "8082:8080"
+    environment:
+      SWAGGER_JSON: /docs/swagger.json
+    volumes:
+      - ./docs:/docs
+
+
+volumes:
+  vide_grenier_dev_db:

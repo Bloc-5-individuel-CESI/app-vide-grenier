@@ -6,16 +6,7 @@
 <div class="container-fluid bg-image">
     <div class="row">
         <div class="login-wraper">
-            <div class="hidden-xs">
-                <img src="images/login.jpg" alt="">
-            </div>
-            <div class="banner-text hidden-xs">
-                <div class="line"></div>
-                <div class="b-text">
-                    Des <span class="color-active">centaines<br> </span> <span class="color-b1">d'articles vous
-                </span>attendent
-                </div>
-            </div>
+            <!-- Suppression des éléments avec hidden-xs pour avoir le même affichage sur tous les appareils -->
             <div class="login-window">
                 <div class="l-head">
                     Connexion
@@ -35,26 +26,19 @@
                         <div class="checkbox">
                             <label>
                                 <label class="checkbox">
-                                    <input type="checkbox" name="#">
+                                    <input type="checkbox" name="remember_me">
                                     <span class="arrow"></span>
                                 </label> <span>Se souvenir de moi</span>
                                 <span class="text2">(non recommandé si vous êtes sur un ordinateur partagé)</span>
                             </label>
                         </div>
                         <div class="row">
-                            <div
-                                    class="col-lg-7"><button type="submit" name="submit" class="btn btn-cv1">Connexion
-                                </button></div>
-                            <div class="hidden-xs">
-                                <div class="col-lg-1 ortext">or</div>
-                                <div class="col-lg-4 signuptext"><a href="signup.html">Inscription</a></div>
+                            <div class="col-lg-7">
+                                <button type="submit" name="submit" class="btn btn-cv1">Connexion</button>
                             </div>
+                            <!-- Élément supprimé car caché en mobile -->
                         </div>
-                        <div class="row hidden-xs">
-                            <div class="col-lg-12 forgottext">
-                                <a href="#">Mot de passe oublié ?</a>
-                            </div>
-                        </div>
+                        <!-- Élément supprimé car caché en mobile -->
                     </form>
                 </div>
             </div>
@@ -62,4 +46,91 @@
     </div>
 </div>
 
+<style>
+    /* Styles pour assurer la même apparence sur mobile et desktop */
+    .bg-image {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+    
+    .login-wraper {
+        max-width: 450px;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .login-window {
+        padding: 20px;
+    }
+    
+    .l-head {
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    .l-form .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .l-form label {
+        font-weight: 500;
+        display: block;
+        margin-bottom: 8px;
+    }
+    
+    .l-form .form-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .checkbox {
+        margin-bottom: 20px;
+    }
+    
+    .checkbox input[type="checkbox"] {
+        margin-right: 5px;
+    }
+    
+    .text2 {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    .btn-cv1 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 0;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 100%;
+    }
+    
+    .btn-cv1:hover {
+        background-color: #0069d9;
+    }
+    
+    /* Pour maintenir une apparence cohérente sur tous les appareils */
+    @media (min-width: 768px) {
+        .login-wraper {
+            max-width: 450px;
+        }
+        
+        .login-window {
+            padding: 20px;
+        }
+    }
+</style>
 {% endblock %}
