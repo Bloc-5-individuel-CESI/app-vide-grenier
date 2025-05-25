@@ -14,5 +14,5 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.DEPLOY_PAT }}
-          repository: Bloc-5-individuel-CESI/deploy-vide-grenier
+          repository: Bloc-5-individuel-CESI/deploiement-vide-grenier
           event-type: deploy-prod
