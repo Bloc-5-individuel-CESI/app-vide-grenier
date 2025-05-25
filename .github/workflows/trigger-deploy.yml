@@ -1,0 +1,18 @@
+name: 🚀 Trigger Deploy on Master Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔐 Appeler le repo deploy
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DEPLOY_PAT }}
+          repository: Bloc-5-individuel-CESI/deploy-vide-grenier
+          event-type: deploy-prod
