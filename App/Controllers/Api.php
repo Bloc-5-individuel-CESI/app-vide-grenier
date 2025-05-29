@@ -31,14 +31,15 @@ class Api extends \Core\Controller
             )
         ]
     )]
-    public function ProductsAction()
-    {
-        $query = $_GET['sort'] ?? null;
-        $articles = Articles::getAll($query);
+public function ProductsAction()
+{
+    $sort = $_GET['sort'] ?? '';
+    $search = $_GET['search'] ?? '';
+    $articles = Articles::getAll($sort, $search);
 
-        header('Content-Type: application/json');
-        echo json_encode($articles);
-    }
+    header('Content-Type: application/json');
+    echo json_encode($articles);
+}
 
     #[OA\Get(
         path: "/api/cities",

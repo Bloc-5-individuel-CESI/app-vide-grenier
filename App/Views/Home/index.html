@@ -42,6 +42,14 @@
                     </div>
 
                     <div class="cb-content">
+                        <div class="row" style="margin-bottom: 20px;">
+    <div class="col-lg-12">
+        <form id="searchForm" class="form-inline text-center" style="position: relative; top: -62px;">
+            <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un article..." style="width: 300px; max-width: 100%;">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
+    </div>
+</div>
                         <div class="row" id="articlelist">
 
                         </div>
@@ -58,16 +66,28 @@
 {% block javascript %}
     <script type="text/javascript">
 
-        function getProductsAndRender(option = ''){
-            $.ajax({
-                url: "/api/products" + '?sort=' + option,
-            }).done(function(result) {
-                $('#articlelist').empty();
-                for(let i = 0; i < result.length; i++){
-                    renderProduct(result[i])
-                }
-            });
+function getProductsAndRender(option = '', search = ''){
+    let url = "/api/products?sort=" + option;
+    if (search) {
+        url += '&search=' + encodeURIComponent(search);
+    }
+
+    $.ajax({
+        url: url,
+    }).done(function(result) {
+        $('#articlelist').empty();
+        for(let i = 0; i < result.length; i++){
+            renderProduct(result[i])
         }
+    });
+}
+
+$('#searchForm').on('submit', function(e) {
+    e.preventDefault();
+    const keyword = $('#searchInput').val().trim();
+    getProductsAndRender('', keyword);
+});
+
 
         function renderProduct($product){
              $('<div class="col-lg-4 col-sm-6 articleitem" id="article-pattern">' +
