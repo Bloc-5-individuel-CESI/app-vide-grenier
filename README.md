@@ -46,3 +46,7 @@ Les modèles sont utilisés pour récupérer ou stocker des données dans l'appl
 ```php
 $db = static::getDB();
 ```
+
+## SMTP
+
+Dans le fichier `Controllers/Contact.php`, de la ligne 23 à la ligne 28, vous allez devoir renseigner les informations de votre SMTP affin de pouvoir automatiser l'envoie de mail de l'application.
