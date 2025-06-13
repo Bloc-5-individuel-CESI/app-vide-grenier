@@ -19,26 +19,35 @@ class Articles extends Model {
      * @return string|boolean
      * @throws Exception
      */
-    public static function getAll($filter) {
-        $db = static::getDB();
+public static function getAll($filter = '', $search = '') {
+    $db = static::getDB();
 
-        $query = 'SELECT * FROM articles ';
+    $params = [];
+    $query = 'SELECT * FROM articles';
 
-        switch ($filter){
-            case 'views':
-                $query .= ' ORDER BY articles.views DESC';
-                break;
-            case 'data':
-                $query .= ' ORDER BY articles.published_date DESC';
-                break;
-            case '':
-                break;
-        }
-
-        $stmt = $db->query($query);
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    if (!empty($search)) {
+        $query .= ' WHERE articles.name LIKE :search OR articles.description LIKE :search';
+        $params[':search'] = '%' . $search . '%';
     }
+
+    switch ($filter) {
+        case 'views':
+            $query .= ' ORDER BY articles.views DESC';
+            break;
+        case 'date':
+            $query .= ' ORDER BY articles.published_date DESC';
+            break;
+        default:
+            // pas de tri
+            break;
+    }
+
+    $stmt = $db->prepare($query);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
 
     /**
      * ?
